@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PageOwl - PDF Upload and Process</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🦉 PageOwl</h1>
+            <p>Effortlessly extract content from your PDFs with AI.</p>
+        </header>
+        <main>
+            <form id="upload-form" action="/upload" method="POST" enctype="multipart/form-data">
+                <div id="drop-area" class="file-input">
+                    <input type="file" name="pdf" id="pdf" accept=".pdf" required style="display:none;">
+                    <span>Drag & Drop your PDF here, or Click to Select</span>
+                </div>
+                <button type="submit" class="upload-btn">Upload & Process</button>
+            </form>
+
+            {% if images %}
+            <div class="gallery">
+                <h2>Extracted Images</h2>
+                <div class="gallery-grid">
+                    {% for image in images %}
+                    <div class="gallery-item">
+                        <img src="{{ url_for('static', filename=image) }}" alt="Cropped Image">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </main>
+        <footer>
+            <p> </p>    
+            <p>© 2024 PageOwl - All Rights Reserved</p>
+        </footer>
+    </div>
+
+    <script>
+        const dropArea = document.getElementById('drop-area');
+        const fileInput = document.getElementById('pdf');
+        
+        // Allow drag over
+        dropArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropArea.classList.add('dragging');
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('dragging');
+        });
+
+        // Handle file drop
+        dropArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropArea.classList.remove('dragging');
+            const files = event.dataTransfer.files;
+            if (files.length) {
+                fileInput.files = files; // Set the dropped files to the input
+            }
+        });
+
+        // Click to select file
+        dropArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+    </script>
+</body>
+</html>
+
